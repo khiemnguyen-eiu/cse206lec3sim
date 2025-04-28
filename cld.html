@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combinational Logic Circuits - Decoding Circuits</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1em;
+        }
+
+        section {
+            padding: 20px;
+            background-color: white;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .decoder {
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .input-group,
+        .output {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: gray;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .active {
+            background-color: limegreen;
+        }
+
+        img.circuit {
+            max-width: 150px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        img.circuit-large {
+            max-width: 250px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        img.circuit-larger {
+            max-width: 350px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+
+<body onload="initializeOutputs()">
+
+    <header>
+        <h1>Combinational Logic Circuits</h1>
+    </header>
+
+    <section id="decoding">
+        <h1>Decoder Circuits</h1>
+        <p>Mạch giải mã (Decoder) là một loại mạch điện tử có chức năng chuyển đổi tín hiệu số đầu vào nhị phân (0: 00,
+            1: 01, 2: 10, 3: 11) thành một
+            dạng tín hiệu đầu ra riêng biệt (1000, 0100, 0010, 0001). Thông thường, mạch giải mã nhận vào n bit dữ liệu
+            và kích hoạt đúng một
+            trong số 2^n đầu ra dựa trên tổ hợp giá trị của các bit đầu vào.</p>
+        <p>Mạch giải mã thường được sử dụng trong các ứng dụng như:</p>
+        <ul>
+            <li>Lựa chọn đường truyền trong bộ nhớ (memory addressing)</li>
+            <li>Điều khiển các thiết bị hiển thị (như LED, màn hình)</li>
+            <li>Các hệ thống điều khiển tư duy (logic)</li>
+            <li>Các bộ vi xử lý và vi điều khiển</li>
+        </ul>
+        <p>Một số loại mạch giải mã phổ biến bao gồm:</p>
+        <ul>
+            <li>Mạch giải mã 2-ra-4 (2-to-4 decoder)</li>
+            <li>Mạch giải mã 3-ra-8 (3-to-8 decoder)</li>
+            <li>Mạch giải mã 4-ra-16 (4-to-16 decoder)</li>
+        </ul>
+        <p>Thông thường, mạch giải mã có thể có thêm chân <b>Enable</b> để bật hoặc tắt toàn bộ chức năng giải mã theo
+            yêu cầu.
+        </p>
+        <h2>2-to-4 Line Decoder (No Enable)</h2>
+        <div class="decoder">
+            <div class="input-group">
+                <label>A <input type="checkbox" id="a_2to4" onchange="decode2to4()"></label>
+                <label>B <input type="checkbox" id="b_2to4" onchange="decode2to4()"></label>
+            </div>
+            <img src="decode2to4.png" alt="2-to-4 Decoder without Enable" class="circuit">
+            <div id="output_2to4" class="output"></div>
+        </div>
+
+        <h2>2-to-4 Line Decoder (With Enable)</h2>
+        <div class="decoder">
+            <div class="input-group">
+                <label>EN <input type="checkbox" id="enable_2to4" onchange="decode2to4Enable()"></label>
+                <label>A <input type="checkbox" id="a_2to4_en" onchange="decode2to4Enable()"></label>
+                <label>B <input type="checkbox" id="b_2to4_en" onchange="decode2to4Enable()"></label>
+            </div>
+            <img src="decode2to4Enable.png" alt="2-to-4 Decoder with Enable" class="circuit-large">
+            <div id="output_2to4_en" class="output"></div>
+        </div>
+
+        <h2>3-to-8 Line Decoder (No Enable)</h2>
+        <div class="decoder">
+            <div class="input-group">
+                <label>A <input type="checkbox" id="a_3to8" onchange="decode3to8()"></label>
+                <label>B <input type="checkbox" id="b_3to8" onchange="decode3to8()"></label>
+                <label>C <input type="checkbox" id="c_3to8" onchange="decode3to8()"></label>
+            </div>
+            <img src="decode3to8.png" alt="3-to-8 Decoder without Enable" class="circuit-larger">
+            <div id="output_3to8" class="output"></div>
+        </div>
+
+        <h2>3-to-8 Line Decoder (With Enable)</h2>
+        <div class="decoder">
+            <div class="input-group">
+                <label>EN <input type="checkbox" id="enable_3to8" onchange="decode3to8Enable()"></label>
+                <label>A <input type="checkbox" id="a_3to8_en" onchange="decode3to8Enable()"></label>
+                <label>B <input type="checkbox" id="b_3to8_en" onchange="decode3to8Enable()"></label>
+                <label>C <input type="checkbox" id="c_3to8_en" onchange="decode3to8Enable()"></label>
+            </div>
+            <img src="decode3to8Enable.png" alt="3-to-8 Decoder with Enable" class="circuit-large">
+            <div id="output_3to8_en" class="output"></div>
+        </div>
+    </section>
+
+    <script>
+        function updateCircles(containerId, activeIndex, totalOutputs) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            for (let i = 0; i < totalOutputs; i++) {
+                const circle = document.createElement('div');
+                circle.classList.add('circle');
+                circle.innerText = i;
+                if (i === activeIndex) {
+                    circle.classList.add('active');
+                }
+                container.appendChild(circle);
+            }
+        }
+
+        function decode2to4() {
+            let a = document.getElementById('a_2to4').checked ? 1 : 0;
+            let b = document.getElementById('b_2to4').checked ? 1 : 0;
+            let index = (b << 1) | a;
+            updateCircles('output_2to4', index, 4);
+        }
+
+        function decode2to4Enable() {
+            let enable = document.getElementById('enable_2to4').checked;
+            let a = document.getElementById('a_2to4_en').checked ? 1 : 0;
+            let b = document.getElementById('b_2to4_en').checked ? 1 : 0;
+            if (enable) {
+                let index = (b << 1) | a;
+                updateCircles('output_2to4_en', index, 4);
+            } else {
+                updateCircles('output_2to4_en', -1, 4);
+            }
+        }
+
+        function decode3to8() {
+            let a = document.getElementById('a_3to8').checked ? 1 : 0;
+            let b = document.getElementById('b_3to8').checked ? 1 : 0;
+            let c = document.getElementById('c_3to8').checked ? 1 : 0;
+            let index = (c << 2) | (b << 1) | a;
+            updateCircles('output_3to8', index, 8);
+        }
+
+        function decode3to8Enable() {
+            let enable = document.getElementById('enable_3to8').checked;
+            let a = document.getElementById('a_3to8_en').checked ? 1 : 0;
+            let b = document.getElementById('b_3to8_en').checked ? 1 : 0;
+            let c = document.getElementById('c_3to8_en').checked ? 1 : 0;
+            if (enable) {
+                let index = (c << 2) | (b << 1) | a;
+                updateCircles('output_3to8_en', index, 8);
+            } else {
+                updateCircles('output_3to8_en', -1, 8);
+            }
+        }
+
+        function initializeOutputs() {
+            decode2to4();
+            decode2to4Enable();
+            decode3to8();
+            decode3to8Enable();
+        }
+    </script>
+
+</body>
+
+</html>
