@@ -271,6 +271,41 @@
         <img src="mux4to1diag.png" alt="4-to-1 Multiplexer Diagram" style="max-width: 500px;">
     </section>
 
+    <section id="demultiplexer">
+        <h1>Demultiplexer Circuits</h1>
+        <p>Bộ phân tách hay bộ phân kênh (Demultiplexer - viết tắt là DEMUX) là một loại mạch tổ hợp trong điện tử số,
+            có chức năng nhận
+            một tín hiệu đầu vào và phân phối tín hiệu đó tới một trong nhiều đầu ra. Bộ phân kênh thực hiện quá trình
+            ngược lại so với bộ chọn (Multiplexer).</p>
+
+        <p>Một bộ phân kênh thông thường có:
+        <ul>
+            <li>1 đầu vào dữ liệu (Data Input),</li>
+            <li>n đầu vào chọn (Select Inputs) để quyết định tín hiệu sẽ được gửi đến đầu ra nào,</li>
+            <li>và 2<sup>n</sup> đầu ra (Outputs).</li>
+        </ul>
+        </p>
+
+        <p>Ví dụ: Một bộ phân kênh 1-4 có 1 đầu vào dữ liệu (D), 2 đầu vào chọn (S1, S0), và 4 đầu ra (Y0, Y1, Y2, Y3).
+            Các tín hiệu tại đầu vào chọn S1 và S0 sẽ xác định đầu ra nào nhận dữ liệu từ đầu vào, D0 hoặc D1 hoặc D2
+            hoặc
+            D3.</p>
+
+        <h2>1-to-4 Demultiplexer</h2>
+        <div class="decoder">
+            <div class="input-group">
+                <label>S0 <input type="checkbox" id="s0_demux" onchange="updateDemuxOutput()"></label>
+                <label>S1 <input type="checkbox" id="s1_demux" onchange="updateDemuxOutput()"></label>
+            </div>
+            <div id="input_demux" class="output"></div>
+            <img src="demux1to4.png" alt="1-to-4 Demultiplexer" class="circuit-large">
+            <div id="output_demux" class="output"></div>
+        </div>
+        
+        <h2>1-to-4 Demultiplexer Logic Diagram</h2>
+        <img src="demux1to4diag.png" alt="1-to-4 Demultiplexer Diagram" style="max-width: 300px;">
+    </section>
+
     <script>
         function updateCircles(containerId, activeIndex, totalOutputs) {
             const container = document.getElementById(containerId);
@@ -451,6 +486,47 @@
             updateMuxCircles(selectedInput); // <-- Pass selected input to highlight
         }
 
+        
+
+        let demuxInput = 0;
+
+        function startDemuxInputOscillation() {
+            setInterval(() => {
+                demuxInput ^= 1;
+                updateDemuxOutput();
+            }, 250); // 2 Hz => toggle every 0.5s
+        }
+
+        function updateDemuxOutput() {
+            let s1 = document.getElementById('s1_demux').checked ? 1 : 0;
+            let s0 = document.getElementById('s0_demux').checked ? 1 : 0;
+            let selectedOutput = (s1 << 1) | s0;
+
+            // Update Input D
+            const inputContainer = document.getElementById('input_demux');
+            inputContainer.innerHTML = '';
+            const dCircle = document.createElement('div');
+            dCircle.classList.add('circle');
+            dCircle.innerText = 'D';
+            if (demuxInput === 1) {
+                dCircle.classList.add('active');
+            }
+            inputContainer.appendChild(dCircle);
+
+            // Update Outputs Y0, Y1, Y2, Y3
+            const outputContainer = document.getElementById('output_demux');
+            outputContainer.innerHTML = '';
+            for (let i = 0; i < 4; i++) {
+                const circle = document.createElement('div');
+                circle.classList.add('circle');
+                circle.innerText = 'Y' + i;
+                if (i === selectedOutput && demuxInput === 1) {
+                    circle.classList.add('active');
+                }
+                outputContainer.appendChild(circle);
+            }
+        }
+
         function initializeOutputs() {
             decode2to4();
             decode2to4Enable();
@@ -460,6 +536,8 @@
             updateMuxCircles();
             updateMuxOutput();
             startMuxInputOscillation();
+            updateDemuxOutput();
+            startDemuxInputOscillation();
         }
     </script>
 
