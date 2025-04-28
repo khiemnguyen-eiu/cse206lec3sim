@@ -103,8 +103,7 @@
     </header>
 
     <section id="intro">
-        <h2>Mạch tư duy tổ hợp (Combinational Logic Circuits)</h2>
-        <p>Mạch tư duy tổ hợp (Mạch logic tổ hợp) là loại mạch điện tử trong đó đầu ra của mạch là một hàm tư duy trực
+        <p>Mạch tư duy tổ hợp là loại mạch điện tử trong đó đầu ra của mạch là một hàm tư duy trực
             tiếp của các đầu vào tại cùng thời điểm.</p>
         <p>Đặc điểm chính của mạch tư duy tổng hợp:</p>
         <ul>
@@ -112,7 +111,8 @@
             <li>Đầu ra thay đổi ngay lập tức khi đầu vào thay đổi</li>
             <li>Không có bộ nhớ (memoryless)</li>
         </ul>
-        <p>Mạch tư duy tổng hợp chức năng thông dụng - <b>Combinational Functional Blocks</b>:</p>
+        <h2>Combinational Functional Blocks- Mạch Tư Duy Chức Năng</h2>
+        <p>Mạch chức năng được tạo nên từ mạch tư duy tổ hợp thông dụng gồm:</p>
         <ul>
             <li>Các bộ giải mã (decoder)</li>
             <li>Các bộ mã hóa (encoder)</li>
@@ -198,9 +198,11 @@
             phân đầu ra.Thông thường, một mạch mã hóa có 2<sup>n</sup> đầu vào và n đầu ra. Ví dụ, một mạch mã hóa 8-3
             sẽ có 8 tín hiệu đầu vào và 3 tín hiệu đầu ra, biểu diễn mã nhị phân của đầu vào đang được kích hoạt.</p>
         <p>Tuy nhiên, trong thực tế, có thể xảy ra trường hợp nhiều đầu vào cùng được kích hoạt cùng lúc. Để xử lý vấn
-            đề này, người ta thiết kế <b>mạch mã hóa ưu tiên (Priority Encoder)</b>. Trong mạch mã hóa ưu tiên, nếu có nhiều
+            đề này, người ta thiết kế <b>mạch mã hóa ưu tiên (Priority Encoder)</b>. Trong mạch mã hóa ưu tiên, nếu có
+            nhiều
             đầu vào đồng thời ở mức "1", mạch sẽ tự động ưu tiên tín hiệu đầu vào có thứ tự cao hơn</p>
-        <p>Ngoài ra, nhiều mạch mã hóa còn bổ sung một đầu ra đặc biệt gọi là chân <b>Validity (V)</b>, hay còn gọi là chân hợp
+        <p>Ngoài ra, nhiều mạch mã hóa còn bổ sung một đầu ra đặc biệt gọi là chân <b>Validity (V)</b>, hay còn gọi là
+            chân hợp
             lệ. Chân này có nhiệm vụ báo hiệu rằng có ít nhất một đầu vào đang được kích hoạt. Nếu tất cả các đầu vào
             đều ở mức "0", chân V sẽ ở mức "0" để báo rằng không có đầu vào hợp lệ; ngược lại, nếu có đầu vào được kích
             hoạt, chân V sẽ ở mức "1".</p>
@@ -216,7 +218,7 @@
         </ul>
 
         <h2>8-to-3 Priority Encoder (with Valid Output)</h2>
-        <div class="decoder">
+        <div class="encoder">
             <div class="input-group">
                 <label>D0 <input type="checkbox" id="d0_8to3p" onchange="priorityEncode8to3()"></label>
                 <label>D1 <input type="checkbox" id="d1_8to3p" onchange="priorityEncode8to3()"></label>
@@ -230,6 +232,44 @@
             <img src="8_3_p_encoder_V.png" alt="8-to-3 Priority Encoder Circuit" class="circuit-larger">
             <div id="output_8to3p" class="output"></div>
         </div>
+        <img src="encoder8to3tb.png" alt="8-to-3 Encoder Truth Table" class="truth-table">
+
+    </section>
+
+    <section id="multiplexer">
+        <h1>Multiplexer Circuits</h1>
+        <p>Bộ chọn hay bộ điều kênh (Multiplexer - viết tắt là MUX) là một loại mạch có chức năng chọn một trong nhiều
+            tín hiệu đầu vào để truyền ra một đầu ra duy nhất. Mục tiêu của bộ chọn là gộp nhiều nguồn dữ liệu vào một
+            đường truyền chung, từ đó giúp tiết kiệm số lượng dây dẫn và tối ưu hóa hệ thống mạch.</p>
+
+        <p>Một bộ chọn thông thường có:
+        <ul>
+            <li>2<sup>n</sup> đầu vào dữ liệu (data inputs),</li>
+            <li>n đầu vào chọn (select inputs) để xác định đầu vào nào sẽ được kết nối tới đầu ra,</li>
+            <li>và 1 đầu ra duy nhất (output).</li>
+        </ul>
+        </p>
+
+        <p>Ví dụ: Một bộ chọn 4-1 có 4 đầu vào dữ liệu (D0, D1, D2, D3), 2 đầu vào chọn (S1, S0), và 1 đầu ra (Y). Các
+            đầu vào chọn S1, S0 sẽ quyết định tín hiệu từ đầu vào nào sẽ xuất hiện tại đầu ra, D0 hoặc D1 hoặc D2 hoặc
+            D3.</p>
+
+        <h2>4-to-1 Multiplexer</h2>
+        <div class="decoder">
+            <div class="input-group">
+                <label>S0 <input type="checkbox" id="s0_mux" onchange="updateMuxOutput()"></label>
+                <label>S1 <input type="checkbox" id="s1_mux" onchange="updateMuxOutput()"></label>
+            </div>
+            <div id="input_mux" class="output"></div>
+            <img src="mux4to1.png" alt="4-to-1 Multiplexer" class="circuit-large">
+            <div id="output_mux" class="output"></div>
+            <div id="selected_input_label" style="text-align:center; margin-top:10px; font-weight:bold;"></div>
+        </div>
+        <img src="mux4to1tb.png" alt="4-to-1 Truth Table" style="max-width: 300px;">
+
+        <h2>4-to-1 Multiplexer Logic Diagram</h2>
+        <img src="mux4to1diag.png" alt="4-to-1 Multiplexer Diagram" style="max-width: 500px;">
+    </section>
 
     <script>
         function updateCircles(containerId, activeIndex, totalOutputs) {
@@ -342,12 +382,84 @@
             }
         }
 
+        let muxInputs = [0, 0, 0, 0];
+
+        function startMuxInputOscillation() {
+            setInterval(() => {
+                muxInputs[0] ^= 1;
+                updateMuxCircles();
+                updateMuxOutput();
+            }, 2000); // 0.5 Hz
+
+            setInterval(() => {
+                muxInputs[1] ^= 1;
+                updateMuxCircles();
+                updateMuxOutput();
+            }, 500); // 1 Hz
+
+            setInterval(() => {
+                muxInputs[2] ^= 1;
+                updateMuxCircles();
+                updateMuxOutput();
+            }, 250);
+
+            setInterval(() => {
+                muxInputs[3] ^= 1;
+                updateMuxCircles();
+                updateMuxOutput();
+            }, 50);
+        }
+
+        function updateMuxCircles(selected = -1) {
+            const inputContainer = document.getElementById('input_mux');
+            inputContainer.innerHTML = '';
+            for (let i = 0; i < 4; i++) {
+                const circle = document.createElement('div');
+                circle.classList.add('circle');
+                circle.innerText = 'I' + i;
+                if (muxInputs[i] === 1) {
+                    circle.classList.add('active');
+                }
+                if (i === selected) {
+                    //circle.style.backgroundColor = 'deepskyblue'; // Highlight selected input
+                    circle.style.color = 'white';
+                    circle.style.border = '6px solid red';
+                }
+                inputContainer.appendChild(circle);
+            }
+        }
+
+        function updateMuxOutput() {
+            let s1 = document.getElementById('s1_mux').checked ? 1 : 0;
+            let s0 = document.getElementById('s0_mux').checked ? 1 : 0;
+            let selectedInput = (s1 << 1) | s0;
+            const yValue = muxInputs[selectedInput];
+
+            const outputContainer = document.getElementById('output_mux');
+            outputContainer.innerHTML = '';
+            const yCircle = document.createElement('div');
+            yCircle.classList.add('circle');
+            yCircle.innerText = 'Y';
+            if (yValue === 1) {
+                yCircle.classList.add('active');
+            }
+            outputContainer.appendChild(yCircle);
+
+            const selectedLabel = document.getElementById('selected_input_label');
+            selectedLabel.innerText = `Selected input: I${selectedInput}`;
+
+            updateMuxCircles(selectedInput); // <-- Pass selected input to highlight
+        }
+
         function initializeOutputs() {
             decode2to4();
             decode2to4Enable();
             decode3to8();
             decode3to8Enable();
             priorityEncode8to3();
+            updateMuxCircles();
+            updateMuxOutput();
+            startMuxInputOscillation();
         }
     </script>
 
