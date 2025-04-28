@@ -99,6 +99,7 @@
 
     <header>
         <h1>Combinational Functional Blocks</h1>
+        <h2>Mạch Tư Duy Chức Năng</h2>
     </header>
 
     <section id="intro">
@@ -190,6 +191,46 @@
             <img src="decode3to8Enable.png" alt="3-to-8 Decoder with Enable" class="circuit-large">
             <div id="output_3to8_en" class="output"></div>
         </div>
+
+    <section id="encoding">
+        <h1>Encoder Circuits</h1>
+        <p>Mạch mã hóa (Encoder) là một mạch điện tử có chức năng trái ngược với mạch giải mã (Decoder). Nó được dùng để
+            mã hóa các tính hiệu đầu vào thành tính hiệu số nhị
+            phân đầu ra.Thông thường, một mạch mã hóa có 2<sup>n</sup> đầu vào và n đầu ra. Ví dụ, một mạch mã hóa 8-3
+            sẽ có 8 tín hiệu đầu vào và 3 tín hiệu đầu ra, biểu diễn mã nhị phân của đầu vào đang được kích hoạt.</p>
+        <p>Tuy nhiên, trong thực tế, có thể xảy ra trường hợp nhiều đầu vào cùng được kích hoạt cùng lúc. Để xử lý vấn
+            đề này, người ta thiết kế <b>mạch mã hóa ưu tiên (Priority Encoder)</b>. Trong mạch mã hóa ưu tiên, nếu có nhiều
+            đầu vào đồng thời ở mức "1", mạch sẽ tự động ưu tiên tín hiệu đầu vào có thứ tự cao hơn</p>
+        <p>Ngoài ra, nhiều mạch mã hóa còn bổ sung một đầu ra đặc biệt gọi là chân <b>Validity (V)</b>, hay còn gọi là chân hợp
+            lệ. Chân này có nhiệm vụ báo hiệu rằng có ít nhất một đầu vào đang được kích hoạt. Nếu tất cả các đầu vào
+            đều ở mức "0", chân V sẽ ở mức "0" để báo rằng không có đầu vào hợp lệ; ngược lại, nếu có đầu vào được kích
+            hoạt, chân V sẽ ở mức "1".</p>
+
+        <p>Ứng dụng của mạch mã hóa:</p>
+        <ul>
+            <li>Bàn phím số: Khi một phím được nhấn, mạch mã hóa sẽ chuyển tín hiệu từ phím đó thành mã nhị phân
+                gửi cho bộ xử lý.</li>
+            <li>Xử lý tính hiệu cảm biến: Trong các hệ thống cảm biến, mạch mã hóa được sử dụng để đọc vị trí,
+                tốc độ hoặc các trạng thái khác.</li>
+            <li>Thiết kế hệ thống giao tiếp số: Giảm số lượng dây dẫn cần thiết khi truyền tải nhiều tín hiệu.
+            </li>
+        </ul>
+
+        <h2>8-to-3 Priority Encoder (with Valid Output)</h2>
+        <div class="decoder">
+            <div class="input-group">
+                <label>D0 <input type="checkbox" id="d0_8to3p" onchange="priorityEncode8to3()"></label>
+                <label>D1 <input type="checkbox" id="d1_8to3p" onchange="priorityEncode8to3()"></label>
+                <label>D2 <input type="checkbox" id="d2_8to3p" onchange="priorityEncode8to3()"></label>
+                <label>D3 <input type="checkbox" id="d3_8to3p" onchange="priorityEncode8to3()"></label>
+                <label>D4 <input type="checkbox" id="d4_8to3p" onchange="priorityEncode8to3()"></label>
+                <label>D5 <input type="checkbox" id="d5_8to3p" onchange="priorityEncode8to3()"></label>
+                <label>D6 <input type="checkbox" id="d6_8to3p" onchange="priorityEncode8to3()"></label>
+                <label>D7 <input type="checkbox" id="d7_8to3p" onchange="priorityEncode8to3()"></label>
+            </div>
+            <img src="8_3_p_encoder_V.png" alt="8-to-3 Priority Encoder Circuit" class="circuit-larger">
+            <div id="output_8to3p" class="output"></div>
+        </div>
     </section>
 
     <script>
@@ -247,11 +288,68 @@
             }
         }
 
+        function priorityEncode8to3() {
+            let inputs = [
+                document.getElementById('d0_8to3p').checked,
+                document.getElementById('d1_8to3p').checked,
+                document.getElementById('d2_8to3p').checked,
+                document.getElementById('d3_8to3p').checked,
+                document.getElementById('d4_8to3p').checked,
+                document.getElementById('d5_8to3p').checked,
+                document.getElementById('d6_8to3p').checked,
+                document.getElementById('d7_8to3p').checked
+            ];
+            let outputDiv = document.getElementById('output_8to3p');
+            outputDiv.innerHTML = '';
+
+            // Priority: D7 highest to D0 lowest
+            let activeIndex = -1;
+            for (let i = 7; i >= 0; i--) {
+                if (inputs[i]) {
+                    activeIndex = i;
+                    break;
+                }
+            }
+
+            let labels = ['A2', 'A1', 'A0', 'V'];
+            if (activeIndex >= 0) {
+                let binary = activeIndex.toString(2).padStart(3, '0');
+                // Output circles for A2, A1, A0, V
+                for (let i = 0; i < 3; i++) {
+                    const circle = document.createElement('div');
+                    circle.classList.add('circle');
+                    circle.innerText = labels[i];
+                    if (binary[2 - i] === '1') {
+                        circle.classList.add('active');
+                    }
+                    outputDiv.appendChild(circle);
+                }
+                // Add V = 1
+                const vCircle = document.createElement('div');
+                vCircle.classList.add('circle', 'active');
+                vCircle.innerText = labels[3];
+                outputDiv.appendChild(vCircle);
+            } else {
+                // No active input
+                for (let i = 0; i < 3; i++) {
+                    const circle = document.createElement('div');
+                    circle.classList.add('circle');
+                    circle.innerText = labels[i];
+                    outputDiv.appendChild(circle);
+                }
+                const vCircle = document.createElement('div');
+                vCircle.classList.add('circle');
+                vCircle.innerText = labels[3];
+                outputDiv.appendChild(vCircle);
+            }
+        }
+
         function initializeOutputs() {
             decode2to4();
             decode2to4Enable();
             decode3to8();
             decode3to8Enable();
+            priorityEncode8to3();
         }
     </script>
 
