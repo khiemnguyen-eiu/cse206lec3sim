@@ -622,6 +622,14 @@ A - <b style="color: blue;"><i>B</i></b> = A + <b style="color: blue;"><i>(số 
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
                 <label for="a_sub"><b>A:</b></label>
                 <select id="a_sub" onchange="update4BitSubtractor()">
+                    <option value="-8">-8</option>
+                    <option value="-7">-7</option>
+                    <option value="-6">-6</option>
+                    <option value="-5">-5</option>
+                    <option value="-4">-4</option>
+                    <option value="-3">-3</option>
+                    <option value="-2">-2</option>
+                    <option value="-1">-1</option>
                     <option value="0">0</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -638,6 +646,14 @@ A - <b style="color: blue;"><i>B</i></b> = A + <b style="color: blue;"><i>(số 
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
                 <label for="b_sub"><b>B:</b></label>
                 <select id="b_sub" onchange="update4BitSubtractor()">
+                    <option value="-8">-8</option>
+                    <option value="-7">-7</option>
+                    <option value="-6">-6</option>
+                    <option value="-5">-5</option>
+                    <option value="-4">-4</option>
+                    <option value="-3">-3</option>
+                    <option value="-2">-2</option>
+                    <option value="-1">-1</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -948,13 +964,17 @@ A - <b style="color: blue;"><i>B</i></b> = A + <b style="color: blue;"><i>(số 
             const a = parseInt(document.getElementById('a_sub').value);
             const b = parseInt(document.getElementById('b_sub').value);
 
-            // Two's complement of B
-            const b_twos_comp = (~b & 0b1111) + 1;  // 4-bit two's complement
-            const result = a + b_twos_comp;
+            // Convert a and b to their 4-bit two's complement binary representation
+            const a_twos_comp = (a < 0) ? (a + 16) : a; // Handle negative values for a
+            const b_twos_comp = (b < 0) ? (b + 16) : b; // Handle negative values for b
 
-            updateBinaryCircles('a_sub_bin', a, 4);
-            updateBinaryCircles('b_sub_bin', b, 4);
-            updateBinaryCircles('b_twos_comp_bin', b_twos_comp & 0b1111, 4);
+            // Two's complement subtraction: A - B = A + (~B + 1)
+            const b_twos_comp_neg = (~b_twos_comp & 0b1111) + 1; // Two's complement negation of B
+            const result = a_twos_comp + b_twos_comp_neg;
+
+            updateBinaryCircles('a_sub_bin', a_twos_comp, 4);
+            updateBinaryCircles('b_sub_bin', b_twos_comp, 4);
+            updateBinaryCircles('b_twos_comp_bin', b_twos_comp_neg & 0b1111, 4);
 
             const carryOut = (result >> 4) & 0b1;
             const fourBitResult = result & 0b1111;
@@ -966,7 +986,6 @@ A - <b style="color: blue;"><i>B</i></b> = A + <b style="color: blue;"><i>(số 
             updateBinaryCircles('sub_result_value', fourBitResult, 4);  // 4-bit result
 
             document.getElementById('sub_result_dec').innerText = signedResult;
-
         }
 
         function initializeOutputs() {
