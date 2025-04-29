@@ -306,6 +306,162 @@
         <img src="demux1to4diag.png" alt="1-to-4 Demultiplexer Diagram" style="max-width: 300px;">
     </section>
 
+    <section if="adder">
+        <h2>Mạch cộng (Adder)</h2>
+        <p>Mạch cộng (Adder) là một mạch tổ hợp dùng để thực hiện phép cộng hai số nhị phân. Trong điện tử số, mạch cộng
+            được sử dụng rất phổ biến trong các bộ xử lý, đơn vị tính tư duy số học (Arithmetic Logic Unic).</p>
+
+        <p><b>Mạch cộng đủ 1-bit (Full Adder)</b> là một mạch cơ bản để cầu tạo một mạch cộng nhiều bit. Mạch này có thể
+            cộng hai bit với một bit nhớ từ phép tính trước đó. Trong thiết
+            kế vi xử lý, các mạch cộng nhiều bit được mở rộng từ bộ cộng đủ 1-bit để tạo thành mạch cộng 4-bit, 8-bit,
+            16-bit hoặc nhiều hơn. <b>Mạch cộng đủ
+                1-bit</b> có ba đầu vào là A, B và C<sub>in</sub> (carry-in), và hai đầu ra là S (sum) và
+            C<sub>out</sub>
+            (carry-out).</p>
+
+        <div class="decoder">
+            <div class="input-group">
+                <label>A <input type="checkbox" id="a_fa" onchange="updateFullAdder()"></label>
+                <label>B <input type="checkbox" id="b_fa" onchange="updateFullAdder()"></label>
+                <label>C<sub>in</sub> <input type="checkbox" id="cin_fa" onchange="updateFullAdder()"></label>
+            </div>
+            <img src="full-adder.png" alt="1-Bit Full Adder Circuit" class="circuit-large">
+            <div id="output_fa" class="output"></div>
+        </div>
+
+        <p>Bảng chân trị của mạch cộng đủ 1-bit:</p>
+        <table border="1" cellpadding="5">
+            <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>C<sub>in</sub></th>
+                <th>S</th>
+                <th>C<sub>out</sub></th>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>0</td>
+                <td>1</td>
+                <td>1</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>1</td>
+                <td>0</td>
+                <td>1</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>1</td>
+                <td>1</td>
+                <td>0</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+                <td>1</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>1</td>
+                <td>0</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+        </table>
+
+        <p>Biểu thức logic:</p>
+        <ul>
+            <li>S = A ⊕ B ⊕ C<sub>in</sub></li>
+            <li>C<sub>out</sub> = (A · B) + (C<sub>in</sub> · (A ⊕ B))</li>
+        </ul>
+
+        <p>Ví dụ: <b>Mạch cộng 3-bit (3-Bit Adder)</b></p>
+        <p>Để cộng hai số nhị phân 3-bit, ta cần ghép nối ba mạch cộng đủ 1-bit (Full Adder - FA) liên tiếp như sau:</p>
+
+        <ul>
+            <li>Bit 0: Dùng một mạch cộng đủ để cộng A<sub>0</sub> và B<sub>0</sub> với C<sub>in</sub> = 0. Xuất ra
+                S<sub>0</sub> và C<sub>out0</sub>.</li>
+            <li>Bit 1: Dùng mạch cộng đủ thứ hai để cộng A<sub>1</sub> và B<sub>1</sub> với C<sub>in</sub> =
+                C<sub>out0</sub>. Xuất ra S<sub>in</sub> và C<sub>out1</sub>.</li>
+            <li>Bit 2: Dùng mạch cộng đủ thứ ba để cộng A<sub>2</sub> và B<sub>2</sub> với C<sub>in</sub> =
+                C<sub>out1</sub>. Xuất ra S<sub>2</sub> và C<sub>out2</sub>.</li>
+        </ul>
+
+        <p>Đầu ra cuối cùng là một số nhị phân 4-bit gồm ba bit tổng (S<sub>2</sub>, S<sub>1</sub>, S<sub>0</sub>) và
+            bit nhớ cuối (C<sub>out2</sub>) nếu có tràn số (overflow).
+        </p>
+
+
+        <h2>3-Bit Adder</h2>
+        <div class="alu">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <label for="a_3bit"><b>A:</b></label>
+                <select id="a_3bit" onchange="update3BitAdder()">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                </select>
+                <div id="a_3bit_bin" style="display: flex; gap: 5px;"></div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <label for="b_3bit"><b>B:</b></label>
+                <select id="b_3bit" onchange="update3BitAdder()">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                </select>
+                <div id="b_3bit_bin" style="display: flex; gap: 5px;"></div>
+            </div>
+
+            <div style="margin: 10px 0;">
+                <img src="adder3bit.png" alt="3-Bit Adder Circuit" class="circuit-larger" style="max-width: 600px;">
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <label><b>KẾT QUẢ (C<sub>out</sub> + S):</b> <span id="sum_3bit_dec">0</span></label>
+                <div id="sum_3bit_bin" style="display: flex; gap: 5px;"></div>
+            </div>
+        </div>
+    </section>
+    
     <script>
         function updateCircles(containerId, activeIndex, totalOutputs) {
             const container = document.getElementById(containerId);
@@ -486,8 +642,6 @@
             updateMuxCircles(selectedInput); // <-- Pass selected input to highlight
         }
 
-        
-
         let demuxInput = 0;
 
         function startDemuxInputOscillation() {
@@ -527,6 +681,61 @@
             }
         }
 
+        function updateFullAdder() {
+            const a = document.getElementById('a_fa').checked ? 1 : 0;
+            const b = document.getElementById('b_fa').checked ? 1 : 0;
+            const cin = document.getElementById('cin_fa').checked ? 1 : 0;
+
+            const sum = a ^ b ^ cin;
+            const cout = (a & b) | (a & cin) | (b & cin);
+
+            const outputContainer = document.getElementById('output_fa');
+            outputContainer.innerHTML = '';
+
+            const sumCircle = document.createElement('div');
+            sumCircle.classList.add('circle');
+            sumCircle.innerText = 'S';
+            sumCircle.style.width = '50px';
+            if (sum === 1) sumCircle.classList.add('active');
+            outputContainer.appendChild(sumCircle);
+
+            const coutCircle = document.createElement('div');
+            coutCircle.classList.add('circle');
+            coutCircle.innerText = 'Cout';
+            coutCircle.style.width = '50px';
+            if (cout === 1) coutCircle.classList.add('active');
+            outputContainer.appendChild(coutCircle);
+        }
+
+        function update3BitAdder() {
+            const a = parseInt(document.getElementById('a_3bit').value);
+            const b = parseInt(document.getElementById('b_3bit').value);
+            const sum = a + b;
+
+            // Update binary circles
+            updateBinaryCircles('a_3bit_bin', a, 3);
+            updateBinaryCircles('b_3bit_bin', b, 3);
+            updateBinaryCircles('sum_3bit_bin', sum, 4);
+
+            document.getElementById('sum_3bit_dec').innerText = sum;
+        }
+
+        function updateBinaryCircles(containerId, value, bits) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            const binary = value.toString(2).padStart(bits, '0');
+
+            for (let i = 0; i < bits; i++) {
+                const circle = document.createElement('div');
+                circle.classList.add('circle');
+                circle.innerText = binary[i];
+                if (binary[i] === '1') {
+                    circle.classList.add('active');
+                }
+                container.appendChild(circle);
+            }
+        }
+
         function initializeOutputs() {
             decode2to4();
             decode2to4Enable();
@@ -538,6 +747,8 @@
             startMuxInputOscillation();
             updateDemuxOutput();
             startDemuxInputOscillation();
+            updateFullAdder();
+            update3BitAdder();
         }
     </script>
 
