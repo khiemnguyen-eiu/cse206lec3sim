@@ -682,6 +682,7 @@ A - <b style="color: blue;"><i>B</i></b> = A + <b style="color: blue;"><i>(số 
             <div style="display: flex; align-items: center; gap: 10px;">
                 <label><b>4-bit S:</b> <span id="sub_result_dec">0</span></label>
                 <div id="sub_result_value" style="display: flex; gap: 5px;"></div>
+                <div id="overflow_detect" style="display: flex;"></div>
             </div>
         </div>
     </section>
@@ -987,6 +988,15 @@ A - <b style="color: blue;"><i>B</i></b> = A + <b style="color: blue;"><i>(số 
             updateBinaryCircles('sub_result_value', fourBitResult, 4);  // 4-bit result
 
             document.getElementById('sub_result_dec').innerText = signedResult;
+
+            // Overflow detection
+            const a_sign = (a_twos_comp & 0b1000) >> 3; // MSB of A
+            const b_sign = (b_twos_comp_neg & 0b1000) >> 3; // MSB of -B
+            const result_sign = (fourBitResult & 0b1000) >> 3; // MSB of result
+
+            const overflow = (a_sign === b_sign) && (a_sign !== result_sign);
+            const overflowContainer = document.getElementById('overflow_detect');
+            overflowContainer.innerHTML = overflow ? '<b style="color: red;">⚠️ Phát Hiện Tràn Số - Overflow Detected</b>' : '';
         }
 
         function initializeOutputs() {
