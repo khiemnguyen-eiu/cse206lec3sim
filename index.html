@@ -112,6 +112,12 @@
             color: blue;
         }
 
+        #as_result_dec {
+            font-weight: bold;
+            font-size: larger;
+            color: blue;
+        }
+
         pre {
             font-size: 18px;
             background-color: #f8f8f8;
@@ -687,7 +693,106 @@ A - <b style="color: blue;"><i>B</i></b> = A + <b style="color: blue;"><i>(số 
         </div>
     </section>
 
+    
 
+    <section if="adder">
+        <h2>Mạch Cộng Trừ Đa Năng - <i>Adder/Subtractor</i></h2>
+        <p>Mạch cộng trừ đa năng (Adder/Subtractor) là một mạch tổ hợp có khả năng thực hiện cả phép cộng và phép trừ giữa hai
+            số nhị phân. Thay vì sử dụng hai mạch riêng biệt, mạch cộng/trừ thực hiện hai phép toán một cách linh hoạt, chỉ thông qua một tín hiệu điều khiển. Để làm được việc này, mạch có:
+        </p>
+
+        <ul>
+            <li>Một tín hiệu điều khiển gọi là <b>Subtract</b>:</li>
+            <ul>
+                <li>Khi <b>Subtract = 0</b>: thực hiện phép cộng (A + B)</li>
+                <li>Khi <b>Subtract = 1</b>: thực hiện phép trừ (A - B)</li>
+            </ul>
+            <li>Các cổng XOR được sử dụng để chuyển đổi đầu vào B thành dạng bù hai khi thực hiện phép trừ.</li>
+        </ul>
+
+        <p>Mỗi bit của B sẽ đi qua một cổng XOR với tín hiệu Subtract. Nếu Subtract = 0, B không đổi. Nếu Subtract = 1, B bị đảo (tương
+            đương với bước lấy bù một), sau đó tín hiệu Subtract cũng được đưa vào Carry-in ban đầu của bộ cộng để hoàn tất
+            quá trình lấy bù hai.</p>
+        <h2>4-Bit Adder/Subtractor</h2>
+        <div class="alu">
+
+            <!-- A input -->
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <label for="a_as"><b>A:</b></label>
+                <select id="a_as" onchange="updateAdderSubtractor()">
+                    <option value="-8">-8</option>
+                    <option value="-7">-7</option>
+                    <option value="-6">-6</option>
+                    <option value="-5">-5</option>
+                    <option value="-4">-4</option>
+                    <option value="-3">-3</option>
+                    <option value="-2">-2</option>
+                    <option value="-1">-1</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                </select>
+                <div id="a_as_bin" style="display: flex; gap: 5px;"></div>
+            </div>
+
+            <!-- B input -->
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <label for="b_as"><b>B:</b></label>
+                <select id="b_as" onchange="updateAdderSubtractor()">
+                    <option value="-8">-8</option>
+                    <option value="-7">-7</option>
+                    <option value="-6">-6</option>
+                    <option value="-5">-5</option>
+                    <option value="-4">-4</option>
+                    <option value="-3">-3</option>
+                    <option value="-2">-2</option>
+                    <option value="-1">-1</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                </select>
+                <div id="b_as_bin" style="display: flex; gap: 5px;"></div>
+
+                <!-- Two's complement of B (only when subtracting) -->
+                <label id="b_as_twos_label"><b>SỐ BÙ 2 CỦA B:</b></label>
+                <div id="b_as_twos" style="display: flex; gap: 5px;"></div>
+            </div>
+
+            <!-- Mode selector -->
+            <div style="margin-bottom: 10px;">
+                <label><input type="checkbox" id="mode_as" onchange="updateAdderSubtractor()"> Subtract (S)</label>
+            </div>
+
+            <!-- Diagram -->
+            <div style="margin: 10px 0;">
+                <img src="addsub4bit.png" alt="4-Bit Adder/Subtractor Circuit" class="circuit-larger"
+                    style="max-width: 600px;">
+            </div>
+
+            <!-- Result -->
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <label><b>Carry Out:</b></label>
+                <div id="as_carry" style="display: flex; gap: 5px;"></div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <label><b>KẾT QUẢ 4-bit S:</b> <span id="as_result_dec">0</span></label>
+                <div id="as_result_bin" style="display: flex; gap: 5px;"></div>
+                <div id="overflow_detect_as" style="display: flex;"></div>
+            </div>
+        </div>
+    </section>
+    
     <script>
         function updateCircles(containerId, activeIndex, totalOutputs) {
             const container = document.getElementById(containerId);
@@ -999,6 +1104,51 @@ A - <b style="color: blue;"><i>B</i></b> = A + <b style="color: blue;"><i>(số 
             overflowContainer.innerHTML = overflow ? '<b style="color: red;">⚠️ Phát Hiện Tràn Số - Overflow Detected</b>' : '';
         }
 
+        function updateAdderSubtractor() {
+            const a = parseInt(document.getElementById('a_as').value);
+            const b = parseInt(document.getElementById('b_as').value);
+            const isSubtract = document.getElementById('mode_as').checked;
+
+            // Convert inputs to 4-bit two's complement representation
+            const a_twos_comp = (a < 0) ? (a + 16) : a;
+            const b_twos_comp = (b < 0) ? (b + 16) : b;
+
+            let b_effective = b_twos_comp;
+
+            if (isSubtract) {
+                document.getElementById('b_as_twos_label').style.display = 'block';
+                document.getElementById('b_as_twos').style.display = 'flex'; // Show two's complement of B
+                b_effective = (~b_twos_comp & 0b1111) + 1; // Two's complement negation of B
+            } else {
+                // not displaying the two's complement of B when adding
+                document.getElementById('b_as_twos_label').style.display = 'none';
+                document.getElementById('b_as_twos').style.display = 'none';
+            }
+
+            const result = a_twos_comp + b_effective;
+            const carryOut = (result >> 4) & 0b1;
+            const result4bit = result & 0b1111;
+            const signedResult = (result4bit & 0b1000) ? result4bit - 16 : result4bit;
+
+            // Update displays
+            updateBinaryCircles('a_as_bin', a_twos_comp, 4);
+            updateBinaryCircles('b_as_bin', b_twos_comp, 4);
+            updateBinaryCircles('b_as_twos', isSubtract ? b_effective & 0b1111 : 0, 4);
+            updateBinaryCircles('as_carry', carryOut, 1);
+            updateBinaryCircles('as_result_bin', result4bit, 4);
+
+            document.getElementById('as_result_dec').innerText = signedResult;
+
+            // Overflow detection
+            const a_sign = (a_twos_comp & 0b1000) >> 3; // MSB of A
+            const b_sign = (b_effective & 0b1000) >> 3; // MSB of B (or -B if subtracting)
+            const result_sign = (result4bit & 0b1000) >> 3; // MSB of result
+
+            const overflow = (a_sign === b_sign) && (a_sign !== result_sign);
+            const overflowContainer = document.getElementById('overflow_detect_as');
+            overflowContainer.innerHTML = overflow ? '<b style="color: red;">⚠️ Phát Hiện Tràn Số - Overflow Detected</b>' : '';
+        }
+
         function initializeOutputs() {
             decode2to4();
             decode2to4Enable();
@@ -1013,6 +1163,7 @@ A - <b style="color: blue;"><i>B</i></b> = A + <b style="color: blue;"><i>(số 
             updateFullAdder();
             update3BitAdder();
             update4BitSubtractor();
+            updateAdderSubtractor();
         }
 
         // ====== First Bar (manual control) ======
