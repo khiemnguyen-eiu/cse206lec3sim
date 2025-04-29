@@ -39,6 +39,12 @@
             gap: 40px;
         }
 
+        .alu {
+            margin-bottom: 40px;
+            align-items: center;
+            gap: 40px;
+        }
+
         .input-group,
         .output {
             display: flex;
@@ -82,15 +88,94 @@
         }
 
         img.truth-table {
-            max-width: 400px;
-        }
-
-        img.truth-table-large {
             max-width: 600px;
         }
 
-        img.truth-table-larger {
-            max-width: 700px;
+        #sum_3bit_dec {
+            font-weight: bold;
+            font-size: larger;
+            color: blue;
+        }
+
+        #sub_result_dec {
+            font-weight: bold;
+            font-size: larger;
+            color: blue;
+        }
+
+        pre {
+            font-size: 18px;
+            background-color: #f8f8f8;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+
+        .binaryBar {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .bit {
+            width: 40px;
+            height: 40px;
+            border: 1px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background-color: white;
+        }
+
+        .progressContainer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .progressBar {
+            width: 164px;
+            height: 20px;
+            border: 2px solid black;
+            background-color: white;
+            position: relative;
+            margin-right: 10px;
+        }
+
+        .progressFill {
+            height: 100%;
+            background-color: lightgreen;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .decimalValue {
+            font-size: 18px;
+            min-width: 30px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        #buttonContainer,
+        #animationButtonContainer {
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
         }
     </style>
 </head>
@@ -307,9 +392,29 @@
     </section>
 
     <section if="adder">
-        <h2>Mạch Cộng - <i>Adder</i></h2>
+        <h2>Mạch cộng (Adder)</h2>
         <p>Mạch cộng (Adder) là một mạch tổ hợp dùng để thực hiện phép cộng hai số nhị phân. Trong điện tử số, mạch cộng
-            được sử dụng rất phổ biến trong các bộ xử lý, đơn vị tính tư duy số học (Arithmetic Logic Unic).</p>
+            được sử dụng rất phổ biến trong các bộ xử lý, đơn vị tính tư duy số học (Arithmetic Logic Unic). </p>
+
+        <p><i>Bên dưới
+                mô
+                phỏng số dương ở hệ nhị phân, bạn có thể nhấn "TĂNG" để thêm 1 giá trị cho nó</i>.</p>
+
+        <!-- First bar set (with manual Increase/Decrease) -->
+        <div id="binaryBar1" class="binaryBar">
+            <!-- Squares will be created here -->
+        </div>
+
+        <div id="progressContainer1" class="progressContainer">
+            <div id="progressBar1" class="progressBar">
+                <div id="progressFill1" class="progressFill"></div>
+            </div>
+            <div id="decimalValue1" class="decimalValue">0</div>
+        </div>
+
+        <div id="buttonContainer">
+            <button onclick="increase()">TĂNG</button>
+        </div>
 
         <p><b>Mạch cộng đủ 1-bit (Full Adder)</b> là một mạch cơ bản để cầu tạo một mạch cộng nhiều bit. Mạch này có thể
             cộng hai bit với một bit nhớ từ phép tính trước đó. Trong thiết
@@ -461,7 +566,83 @@
             </div>
         </div>
     </section>
-    
+
+    <section if="adder">
+        <h2>Mạch Trừ - <i>Subtractor</i></h2>
+        <p>Mạch trừ (Subtractor) là một mạch tổ hợp trong điện tử số, được sử dụng để thực hiện phép trừ giữa hai số nhị
+            phân. Thay vì thiết kế một mạch trừ hoàn toàn riêng biệt, trong thực tế các hệ thống số thường sử dụng
+            <b>mạch cộng (Adder)</b> kết hợp với phép biểu diễn số âm bằng số <b>bù hai (2's complement)</b> để thực
+            hiện phép trừ.
+        </p>
+
+        <h3>Nguyên lý trừ bằng phép bù hai</h3>
+        <p>Thay vì trực tiếp tính A - B, ta sử dụng công thức:</p>
+        <pre>
+A - <b style="color: blue;"><i>B</i></b> = A + <b style="color: blue;"><i>(số bù 2 của B)</i></b>
+</pre>
+        <p>Trong hệ nhị phân, số bù hai của một số B được tính như sau:</p>
+        <ol>
+            <li>Đảo tất cả các bit của B (lấy bù một, <i>1’s complement</i>).</li>
+            <li>Cộng thêm 1 vào kết quả để có bù hai.</li>
+        </ol>
+
+        <p>Khi đã có bù hai của B, ta cộng nó với A bằng mạch cộng thông thường (Full Adder). Kết quả nhận được chính là
+            A - B.</p>
+        <h2>4-Bit Subtractor (A - B)</h2>
+        <div class="alu">
+
+            <!-- A row -->
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <label for="a_sub"><b>A:</b></label>
+                <select id="a_sub" onchange="update4BitSubtractor()">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                </select>
+                <div id="a_sub_bin" style="display: flex; gap: 5px;"></div>
+            </div>
+
+            <!-- B row -->
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <label for="b_sub"><b>B:</b></label>
+                <select id="b_sub" onchange="update4BitSubtractor()">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                </select>
+                <div id="b_sub_bin" style="display: flex; gap: 5px;"></div>
+                <label><b>SỐ BÙ 2 CỦA B:</b></label>
+                <div id="b_twos_comp_bin" style="display: flex; gap: 5px;"></div>
+            </div>
+
+            <!-- Diagram -->
+            <div style="margin: 10px 0;">
+                <img src="sub3bit.png" alt="4-Bit Subtractor Circuit" class="circuit-larger" style="max-width: 600px;">
+            </div>
+
+            <!-- Result -->
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <label><b>Carry Out:</b></label>
+                <div id="sub_result_carry" style="display: flex; gap: 5px;"></div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <label><b>4-bit S:</b> <span id="sub_result_dec">0</span></label>
+                <div id="sub_result_value" style="display: flex; gap: 5px;"></div>
+            </div>
+        </div>
+    </section>
+
+
     <script>
         function updateCircles(containerId, activeIndex, totalOutputs) {
             const container = document.getElementById(containerId);
@@ -736,6 +917,31 @@
             }
         }
 
+        function update4BitSubtractor() {
+            const a = parseInt(document.getElementById('a_sub').value);
+            const b = parseInt(document.getElementById('b_sub').value);
+
+            // Two's complement of B
+            const b_twos_comp = (~b & 0b1111) + 1;  // 4-bit two's complement
+            const result = a + b_twos_comp;
+
+            updateBinaryCircles('a_sub_bin', a, 4);
+            updateBinaryCircles('b_sub_bin', b, 4);
+            updateBinaryCircles('b_twos_comp_bin', b_twos_comp & 0b1111, 4);
+
+            const carryOut = (result >> 4) & 0b1;
+            const fourBitResult = result & 0b1111;
+
+            // Interpret 4-bit result as signed number (2’s complement)
+            const signedResult = (fourBitResult & 0b1000) ? fourBitResult - 16 : fourBitResult;
+
+            updateBinaryCircles('sub_result_carry', carryOut, 1);       // 1-bit carry
+            updateBinaryCircles('sub_result_value', fourBitResult, 4);  // 4-bit result
+
+            document.getElementById('sub_result_dec').innerText = signedResult;
+
+        }
+
         function initializeOutputs() {
             decode2to4();
             decode2to4Enable();
@@ -749,7 +955,47 @@
             startDemuxInputOscillation();
             updateFullAdder();
             update3BitAdder();
+            update4BitSubtractor();
         }
+
+        // ====== First Bar (manual control) ======
+        const binaryBar1 = document.getElementById('binaryBar1');
+        const numBits = 4;
+        let value1 = 0;
+
+        for (let i = numBits - 1; i >= 0; i--) {
+            const bit = document.createElement('div');
+            bit.className = 'bit';
+            bit.id = 'bit1_' + i;
+            bit.textContent = '0';
+            binaryBar1.appendChild(bit);
+        }
+
+        function updateBar1() {
+            for (let i = 0; i < numBits; i++) {
+                const bit = document.getElementById('bit1_' + i);
+                if (value1 & (1 << i)) {
+                    bit.textContent = '1';
+                    bit.style.backgroundColor = 'lightgreen';
+                } else {
+                    bit.textContent = '0';
+                    bit.style.backgroundColor = 'white';
+                }
+            }
+            const percentage = (value1 / 15) * 100;
+            document.getElementById('progressFill1').style.width = percentage + '%';
+            document.getElementById('decimalValue1').textContent = value1;
+        }
+
+        function increase() {
+            value1++;
+            if (value1 > 15) {
+                value1 = 0;
+            }
+            updateBar1();
+        }
+
+        updateBar1();
     </script>
 
 </body>
